@@ -8,8 +8,8 @@ const port = process.env.PORT || 3090;
 const cors = require('cors');
 const router = require('./routes/routes');
 const passport = require('passport');
-
-mongoose.connect(' mongodb://charchar23:123onestop@ds139277.mlab.com:39277/onestop');
+// mongoose.connect('mongodb://museum:museum12345@ds043027.mlab.com:43027/vrmuseum');
+mongoose.connect('mongodb://charchar23:123onestop@ds139277.mlab.com:39277/onestop');
 // mongoose.connect('mongodb://localhost:auth/auth');
 
 app.all('/*', function(req, res, next) {
