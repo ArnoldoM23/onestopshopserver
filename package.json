@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "nodemon server.js",
+    "pgres": "postgres -D /usr/local/var/postgres"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +26,7 @@
     "passport-github2": "^0.1.10",
     "passport-jwt": "^2.1.0",
     "passport-local": "^1.0.0",
-    "pg": "6.1.0"
+    "pg": "^6.1.0",
+    "sequelize": "^3.23.6"
   }
 }

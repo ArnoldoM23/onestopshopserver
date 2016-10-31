@@ -8,8 +8,24 @@ const port = process.env.PORT || 3090;
 const cors = require('cors');
 const router = require('./routes/routes');
 const passport = require('passport');
-mongoose.connect('mongodb://museum:museum12345@ds043027.mlab.com:43027/vrmuseum');
-// mongoose.connect('mongodb://charchar23:123onestop@ds139277.mlab.com:39277/onestop');
+const sequelize = require('./db/sqlconnect')
+
+var pg = require('pg');
+// UNCOMMENT FOR DEPLOY AND CONNECT TO HEROKU DATABASE
+pg.defaults.ssl = true;
+
+
+sequelize
+  .authenticate()
+  .then(function(err) {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(function (err) {
+    console.log('Unable to connect to the database:', err);
+  })
+
+// mongoose.connect('mongodb://museum:museum12345@ds043027.mlab.com:43027/vrmuseum');
+// // mongoose.connect('mongodb://charchar23:123onestop@ds139277.mlab.com:39277/onestop');
 // mongoose.connect('mongodb://localhost:auth/auth');
 
 app.all('/*', function(req, res, next) {
@@ -28,11 +44,6 @@ app.use(cors());
 
 
 router(app);
-
-app.get('/', function(req, res){
-	res.send("working")
-})
-
 
 
 const server = http.createServer(app);
