@@ -34,7 +34,7 @@ module.exports = function(app){
 	    // res.redirect('/')
 	  });
 
-	app.get('/', requireAuth, function(req, res, next){
+	app.get('/',  function(req, res, next){
 		res.send({message: "But it work tho"})
 	});
 
