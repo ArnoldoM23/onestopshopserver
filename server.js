@@ -9,7 +9,8 @@ const cors = require('cors');
 const router = require('./routes/routes');
 const passport = require('passport');
 
-mongoose.connect('mongodb://localhost:auth/auth');
+mongoose.connect(' mongodb://charchar23:123onestop@ds139277.mlab.com:39277/onestop');
+// mongoose.connect('mongodb://localhost:auth/auth');
 
 app.all('/*', function(req, res, next) {
    res.header("Access-Control-Allow-Origin", "*");
@@ -18,12 +19,14 @@ app.all('/*', function(req, res, next) {
    next();
 
 });
+
+
 app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(cors());
 
-app.use(express.static('../client/'));
+
 router(app);
 
 app.get('/', function(req, res){
