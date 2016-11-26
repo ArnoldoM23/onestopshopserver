@@ -1,34 +1,47 @@
-const express = require('express');
-const app = express();
-const morgan = require('morgan');
-const bodyParser = require('body-parser');
-const PORT = process.env.PORT || 3090;
-const cors = require('cors');
-const router = require('./routes/routes');
-const passport = require('passport');
-const models = require('./db/models');
+const cluster = require('cluster')
 
-var pg = require('pg');
-// UNCOMMENT FOR DEPLOY AND CONNECT TO HEROKU DATABASE
-// pg.defaults.ssl = true;
+if (cluster.isMaster) {
+	var cpuCount = require('os').cpus().length;
+	for (var i = 0; i < cpuCount.length; i++) {
+		cluster.fork();
+	}
 
+	cluster.on('exit', function(worker){
+		console.log('Worker has die, Now being replace', worker.id);
+		cluster.for();
+	});
+}else{
+	const express = require('express');
+	const app = express();
+	const morgan = require('morgan');
+	const bodyParser = require('body-parser');
+	const PORT = process.env.PORT || 3090;
+	const cors = require('cors');
+	const router = require('./routes/routes');
+	const passport = require('passport');
+	const models = require('./db/models');
 
-app.all('/*', function(req, res, next) {
-   res.header("Access-Control-Allow-Origin", "*");
-   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-   res.header("Access-Control-Allow-Methods", "GET, POST","PUT");
-   next();
+	var pg = require('pg');
+	// UNCOMMENT FOR DEPLOY AND CONNECT TO HEROKU DATABASE
+	// pg.defaults.ssl = true;
 
-});
+	app.all('/*', function(req, res, next) {
+	   res.header("Access-Control-Allow-Origin", "*");
+	   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	   res.header("Access-Control-Allow-Methods", "GET, POST","PUT");
+	   next();
 
+	});
 
-app.use(morgan('combined'));
-app.use(bodyParser.json());
-app.use(passport.initialize());
-app.use(cors());
+	app.use(morgan('combined'));
+	app.use(bodyParser.json());
+	app.use(passport.initialize());
+	app.use(cors());
 
-router(app);
+	router(app);
 
-models.sequelize.sync({force: false}).then(() => {
-  app.listen(PORT, () => console.log('listening on port', PORT));
-});
+	models.sequelize.sync({force: false}).then(() => {
+	  app.listen(PORT, () => console.log('listening on port', PORT));
+	});
+}
+

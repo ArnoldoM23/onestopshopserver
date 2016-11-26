@@ -11,13 +11,12 @@ function tokenForUser(user){
   exp.setDate(today.getDate() + 60);
 
 	const timestamp = parseInt(exp.getTime() / 1000);
-	return jwt.encode({ id: user.user_id, iat: timestamp }, config.secret)
+	return jwt.encode({ id: user.user_id, iat: timestamp }, process.env.SECRET || config.SECRET)
 }
 
 
 // SING IN ==============================
 exports.signin = function(req, res, next){
-	console.log("WHAT IS REQ USER", req.user)
 	res.send({ token: tokenForUser(req.user), user: req.user });
 }
 
