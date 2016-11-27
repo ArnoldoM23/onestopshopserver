@@ -1,12 +1,20 @@
 'use strict';
-// const models = require("../db/models");
-// const sequelize = require('../db/models/index.js').sequelize;
 const Auth = require('../controllers/auth');
 const passportService = require('../service/passport');
 const passport = require('passport');
-
+const jwt = require('jwt-simple');
+const config = require('../config');
 const requireAuth = passport.authenticate('jwt', {session: false});
 const requireSignin = passport.authenticate('local', {session: false});
+
+function tokenForUser(user){
+	var today = new Date();
+  var exp = new Date(today);
+  exp.setDate(today.getDate() + 60);
+
+	const timestamp = parseInt(exp.getTime() / 1000);
+	return jwt.encode({ id: user.user_id, iat: timestamp }, process.env.SECRET || config.SECRET)
+}
 
 module.exports = function(app){
 
@@ -22,16 +30,14 @@ module.exports = function(app){
 	  passport.authenticate('facebook',  { failureRedirect: 'http://localhost:3000/signin' }), 
 	  function(req, res){
 	  	const token = tokenForUser(req.user)
-	  	// This will redirect back to home page and add the token to the url
 	    res.redirect('http://localhost:3000/?token=' + token)
 	  });
 
-	app.get('/auth/google/', passport.authenticate('google'));
+	app.get('/auth/google/', passport.authenticate('google', { scope : ['profile', 'email'] }));
 	app.get('/auth/google/callback/',
-	  passport.authenticate('facebook',  { failureRedirect: 'http://localhost:3000/signin' }), 
+	  passport.authenticate('google',  { failureRedirect: 'http://localhost:3000/signin' }), 
 	  function(req, res){
 	  	const token = tokenForUser(req.user)
-	  	// This will redirect back to home page and add the token to the url
 	    res.redirect('http://localhost:3000/?token=' + token)
 	  });
 };

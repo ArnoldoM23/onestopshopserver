@@ -44,7 +44,7 @@ const facebookLogin = new FacebookStrategy({
     //  'ENTER_CLIENT_SECRET'
     clientSecret: Oauth.Facebook.ENTER_CLIENT_SECRET,
     // Make sure that the name you give your callback matches the callback on the server.
-    callbackURL: "http://127.0.0.1:3090/auth/facebook/callback/"
+    callbackURL: "http://localhost:3090/auth/facebook/callback/"
   },
   function(accessToken, refreshToken, profile, cb) {
     process.nextTick(function(){
@@ -76,17 +76,17 @@ passport.deserializeUser(function(user, cb) {
 const googleLogin = new GoogleStrategy({
     clientID: Oauth.Google.ENTER_CLIENT_ID,
     clientSecret: Oauth.Google.ENTER_CLIENT_SECRET,
-    callbackURL: "http://127.0.0.1:3090/auth/google/callback/"
+    callbackURL: "http://localhost:3090/auth/google/callback/"
   },
-  function(accessToken, refreshToken, profile, done) {
+  function(token, refreshToken, profile, done) {
     // asynchronous verification, for effect...
     process.nextTick(function () {
-      models.Clients.findOne( { where: {github_id: profile.id} })
+      models.Clients.findOne( { where: {google_id: profile.id} })
         .then(user => {
           if (user) {
             return done(null, user)
           } else{
-            models.Clients.create({ github_id: profile.id, name: profile.displayName, email: profile.email })
+            models.Clients.create({ google_id: profile.id, name: profile.displayName, email: profile.email })
                 .then(user =>  { done(null, user) })
                 .catch(err => done(err));
           }
