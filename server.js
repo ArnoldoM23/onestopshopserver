@@ -1,16 +1,19 @@
-const cluster = require('cluster')
+const cluster = require('cluster');
 
 if (cluster.isMaster) {
-	var cpuCount = require('os').cpus().length;
-	for (var i = 0; i < cpuCount.length; i++) {
+	const cpuCount = require('os').cpus().length;
+
+	for (let i = 0; i < cpuCount; i++) {
 		cluster.fork();
 	}
 
 	cluster.on('exit', function(worker){
 		console.log('Worker has die, Now being replace', worker.id);
-		cluster.for();
+		cluster.fork();
 	});
+	
 }else{
+
 	const express = require('express');
 	const app = express();
 	const morgan = require('morgan');
@@ -21,7 +24,7 @@ if (cluster.isMaster) {
 	const passport = require('passport');
 	const models = require('./db/models');
 
-	var pg = require('pg');
+	const pg = require('pg');
 	// UNCOMMENT FOR DEPLOY AND CONNECT TO HEROKU DATABASE
 	// pg.defaults.ssl = true;
 
@@ -43,5 +46,5 @@ if (cluster.isMaster) {
 	models.sequelize.sync({force: false}).then(() => {
 	  app.listen(PORT, () => console.log('listening on port', PORT));
 	});
-}
+} 
 

@@ -27,12 +27,12 @@ exports.signup = function(req, res, next){
 	const password = req.body.password;
 	const name = req.body.name;
 	
-	// See if a user wiht a given email exists
+	// See if a user with a given email exists
 	if (!email || !password ) {
 		return res.status(422).json({ error: "You must provide email and password "})
 	}
 
-	models.users.findOne( { where: { email: email } })
+	models.Clients.findOne( { where: { email: email } })
     .then(user => {
       if (user) {
         return next(null, user)
@@ -43,7 +43,7 @@ exports.signup = function(req, res, next){
 					bcrypt.hash(password, salt, null, function(err, hash){
 						if (err) { return next(err); }
 						// Create new user
-						models.users.create({  password: hash, email: email })
+						models.Clients.create({  password: hash, email: email })
 	            .then(user =>  { res.json({token: tokenForUser(user) }) })
 	            .catch(err => next(err) );
 						

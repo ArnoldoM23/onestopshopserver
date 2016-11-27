@@ -5,18 +5,18 @@ module.exports = function() {
   var path      = require("path");
   var Sequelize = require("sequelize");
   var env       = process.env.NODE_ENV || "development";
-  // var config    = require(__dirname + '/../db/config.json')[env];
-  //For Heroku
-  // config.port = process.env.DB_PORT || config.port;
-  // config.host = process.env.DB_HOST || config.host;
-  // config.username = process.env.DB_USER || config.username;
-  // config.password = process.env.DB_PASSWORD || config.password;
-  // config.database = process.env.DB_NAME || config.database;
+  var config    = require('../config.json');
+  // For Heroku
+  config.port = process.env.DB_PORT || config.port;
+  config.host = process.env.DB_HOST || config.host;
+  config.username = process.env.DB_USER || config.username;
+  config.password = process.env.DB_PASSWORD || config.password;
+  config.database = process.env.DB_NAME || config.database;
 
-  var sequelize = new Sequelize('onestop', 'young', '', {
-    host: 'localhost',
+  var sequelize = new Sequelize(config.database, config.username, config.password, {
+    host: config.host,
     dialect: 'postgres',
-    port: 5432
+    port: config.port
 
   });
   var db        = {};

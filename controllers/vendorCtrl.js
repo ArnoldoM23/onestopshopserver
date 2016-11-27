@@ -1,14 +1,14 @@
-conts vendors = require('../db/models/vendors');
+const models = require('../db/models');
 
 module.exports = {
 	createVendor(req, res){
-		vendors.create(req.body)
+		models.Vendors.create(req.body)
 			.then(vendor => { res.send(vendor) })
 			.catch(err => console.log(err))
 	},
 
 	getAllVendors(){
-		vendor.findAll()
+		models.Vendors.findAll()
 			.then(vendors => { res.send(vendors) })
 			.catch(err =>  console.log(err) )
 	}	
