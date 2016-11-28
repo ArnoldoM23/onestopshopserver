@@ -8,6 +8,7 @@ module.exports = function() {
         primaryKey: true,
         autoIncrement: true
       },
+      category: {defaultValue: null, type: DataTypes.STRING},
       facebook_id: {defaultValue: null, type: DataTypes.STRING},
       google_id: {defaultValue: null, type: DataTypes.STRING},
       vendorFirstName: {defaultValue: 'John', type: DataTypes.STRING},

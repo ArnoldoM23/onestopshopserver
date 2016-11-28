@@ -4,8 +4,11 @@ const passportService = require('../service/passport');
 const passport = require('passport');
 const jwt = require('jwt-simple');
 const config = require('../config');
+const vendorCtrl = require('../controllers/vendorCtrl');
+const clientCtrl = require('../controllers/clientCtrl');
 const requireAuth = passport.authenticate('jwt', {session: false});
 const requireSignin = passport.authenticate('local', {session: false});
+
 
 function tokenForUser(user){
 	var today = new Date();
@@ -18,7 +21,7 @@ function tokenForUser(user){
 
 module.exports = function(app){
 
-	app.get('/',  function(req, res, next){
+	app.get('/', requireAuth, function(req, res, next){
 		res.send({message: "But it work tho"})
 	});
 	// local sign in and sign up routes
@@ -32,7 +35,7 @@ module.exports = function(app){
 	  	const token = tokenForUser(req.user)
 	    res.redirect('http://localhost:3000/?token=' + token)
 	  });
-
+	// ================= Google login =======================
 	app.get('/auth/google/', passport.authenticate('google', { scope : ['profile', 'email'] }));
 	app.get('/auth/google/callback/',
 	  passport.authenticate('google',  { failureRedirect: 'http://localhost:3000/signin' }), 
@@ -40,4 +43,9 @@ module.exports = function(app){
 	  	const token = tokenForUser(req.user)
 	    res.redirect('http://localhost:3000/?token=' + token)
 	  });
+
+	app.get('/getAllVendors', vendorCtrl.getAllVendors);
+
+	app.post('/createVendor', vendorCtrl.createVendor);
+	app.post('/updateClient', requireAuth, clientCtrl.updateProfile)
 };
