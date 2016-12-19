@@ -28,7 +28,7 @@ const localLogin = new LocalStrategy(localOptions, function(email, password, don
 
 const jwtOptions = {
 	jwtFromRequest: ExtractJwt.fromHeader('authorization'),
-	secretOrKey: config.SECRET
+	secretOrKey: process.env.SECRET || config.SECRET
 };
 
 const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done){
@@ -42,9 +42,9 @@ const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done){
 
 const facebookLogin = new FacebookStrategy({
     // 'ENTER_CLIENT_ID'
-    clientID: Oauth.Facebook.ENTER_CLIENT_ID,
+    clientID: process.env.CLIENT_ID || Oauth.Facebook.ENTER_CLIENT_ID,
     //  'ENTER_CLIENT_SECRET'
-    clientSecret: Oauth.Facebook.ENTER_CLIENT_SECRET,
+    clientSecret: process.env.CLIENT_SECRET || Oauth.Facebook.ENTER_CLIENT_SECRET,
     // Make sure that the name you give your callback matches the callback on the server.
     callbackURL: `${ROOT_URL}/auth/facebook/callback`
   },
@@ -76,8 +76,8 @@ passport.deserializeUser(function(user, cb) {
 });
 
 const googleLogin = new GoogleStrategy({
-    clientID: Oauth.Google.ENTER_CLIENT_ID,
-    clientSecret: Oauth.Google.ENTER_CLIENT_SECRET,
+    clientID: process.env.CLIENT_ID || Oauth.Google.ENTER_CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET || Oauth.Google.ENTER_CLIENT_SECRET,
     callbackURL: `${ROOT_URL}/auth/google/callback`
   },
   function(token, refreshToken, profile, done) {
