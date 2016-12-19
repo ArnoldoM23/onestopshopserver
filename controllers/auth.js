@@ -32,7 +32,7 @@ exports.signup = function(req, res, next){
 		return res.status(422).json({ error: "You must provide email and password "})
 	}
 
-	models.Clients.findOne( { where: { email: email } })
+	models.Clients.findOne( { where: { userEmail: email } })
     .then(user => {
       if (user) {
         return next(null, user)
