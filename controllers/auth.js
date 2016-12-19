@@ -1,7 +1,7 @@
 'use strict'
 const jwt = require('jwt-simple');
 const bcrypt = require('bcrypt-nodejs');
-const config = require('../config');
+// const config = require('../config');
 const models = require("../db/models");
 const sequelize = require('../db/models/index').sequelize;
 // TODO: Reafactor to into user model
@@ -11,7 +11,7 @@ function tokenForUser(user){
   exp.setDate(today.getDate() + 60);
 
 	const timestamp = parseInt(exp.getTime() / 1000);
-	return jwt.encode({ id: user.user_id, iat: timestamp }, process.env.SECRET || config.SECRET)
+	return jwt.encode({ id: user.user_id, iat: timestamp }, process.env.SECRET )
 }
 
 

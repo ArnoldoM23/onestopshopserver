@@ -3,14 +3,13 @@ const Auth = require('../controllers/auth');
 const passportService = require('../service/passport');
 const passport = require('passport');
 const jwt = require('jwt-simple');
-const config = require('../config');
+// const config = require('../config');
 const vendorCtrl = require('../controllers/vendorCtrl');
 const clientCtrl = require('../controllers/clientCtrl');
 const requireAuth = passport.authenticate('jwt', {session: false});
 const requireSignin = passport.authenticate('local', {session: false});
 
 // const ROOT_URL = 'http://localhost:3000';
-
 const ROOT_URL = 'http://shoponceserver.herokuapp.com';
 
 
@@ -20,7 +19,7 @@ function tokenForUser(user){
   exp.setDate(today.getDate() + 60);
 
 	const timestamp = parseInt(exp.getTime() / 1000);
-	return jwt.encode({ id: user.user_id, iat: timestamp }, process.env.SECRET || config.SECRET)
+	return jwt.encode({ id: user.user_id, iat: timestamp }, process.env.SECRET )
 }
 
 module.exports = function(app){
