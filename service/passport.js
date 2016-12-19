@@ -9,6 +9,8 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const LocalStrategy = require('passport-local');
 
+// const ROOT_URL = 'http://localhost:3000';
+const ROOT_URL = 'http://shoponceserver.herokuapp.com';
 
 const localOptions = { usernameField: 'email'};
 
@@ -44,7 +46,7 @@ const facebookLogin = new FacebookStrategy({
     //  'ENTER_CLIENT_SECRET'
     clientSecret: Oauth.Facebook.ENTER_CLIENT_SECRET,
     // Make sure that the name you give your callback matches the callback on the server.
-    callbackURL: "http://shoponceserver.herokuapp.com/auth/facebook/callback"
+    callbackURL: `${ROOT_URL}/auth/facebook/callback`
   },
   function(accessToken, refreshToken, profile, cb) {
     process.nextTick(function(){
@@ -76,7 +78,7 @@ passport.deserializeUser(function(user, cb) {
 const googleLogin = new GoogleStrategy({
     clientID: Oauth.Google.ENTER_CLIENT_ID,
     clientSecret: Oauth.Google.ENTER_CLIENT_SECRET,
-    callbackURL: "http://localhost:3090/auth/google/callback/"
+    callbackURL: `${ROOT_URL}/auth/google/callback`
   },
   function(token, refreshToken, profile, done) {
     // asynchronous verification, for effect...

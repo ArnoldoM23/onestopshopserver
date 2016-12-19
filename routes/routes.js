@@ -9,6 +9,9 @@ const clientCtrl = require('../controllers/clientCtrl');
 const requireAuth = passport.authenticate('jwt', {session: false});
 const requireSignin = passport.authenticate('local', {session: false});
 
+// const ROOT_URL = 'http://localhost:3000';
+const ROOT_URL = 'http://shoponceserver.herokuapp.com';
+
 
 function tokenForUser(user){
 	var today = new Date();
@@ -30,18 +33,18 @@ module.exports = function(app){
 	// ================= Facebook login =======================
 	app.get('/auth/facebook/', passport.authenticate('facebook'));
 	app.get('/auth/facebook/callback/',
-	  passport.authenticate('facebook',  { failureRedirect: 'http://localhost:3000/signin' }), 
+	  passport.authenticate('facebook',  { failureRedirect: `${ROOT_URL}/signin` }), 
 	  function(req, res){
 	  	const token = tokenForUser(req.user)
-	    res.redirect('http://localhost:3000/?token=' + token)
+	    res.redirect(`${ROOT_URL}/?token=${token}`)
 	  });
 	// ================= Google login =======================
 	app.get('/auth/google/', passport.authenticate('google', { scope : ['profile', 'email'] }));
 	app.get('/auth/google/callback/',
-	  passport.authenticate('google',  { failureRedirect: 'http://localhost:3000/signin' }), 
+	  passport.authenticate('google',  { failureRedirect: `${ROOT_URL}/signin` }), 
 	  function(req, res){
 	  	const token = tokenForUser(req.user)
-	    res.redirect('http://localhost:3000/?token=' + token)
+	    res.redirect(`${ROOT_URL}/?token=${token}`)
 	  });
 
 	app.get('/getAllVendors', vendorCtrl.getAllVendors);
