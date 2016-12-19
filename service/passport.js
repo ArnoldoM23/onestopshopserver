@@ -76,8 +76,8 @@ passport.deserializeUser(function(user, cb) {
 });
 
 const googleLogin = new GoogleStrategy({
-    clientID: process.env.CLIENT_ID, //Oauth.Google.ENTER_CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET, //Oauth.Google.ENTER_CLIENT_SECRET,
+    clientID: process.env.GOOGLE_CLIENT_ID, //Oauth.Google.ENTER_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET, //Oauth.Google.ENTER_CLIENT_SECRET,
     callbackURL: `${ROOT_URL}/auth/google/callback`
   },
   function(token, refreshToken, profile, done) {
