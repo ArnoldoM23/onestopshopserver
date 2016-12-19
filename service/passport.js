@@ -44,7 +44,7 @@ const facebookLogin = new FacebookStrategy({
     //  'ENTER_CLIENT_SECRET'
     clientSecret: Oauth.Facebook.ENTER_CLIENT_SECRET,
     // Make sure that the name you give your callback matches the callback on the server.
-    callbackURL: "http://localhost:3090/auth/facebook/callback/"
+    callbackURL: "http://shoponceserver.herokuapp.com/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, cb) {
     process.nextTick(function(){
