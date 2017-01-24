@@ -1,14 +1,12 @@
 const models = require('../db/models');
+const clientDBWorker = require('../db/dbWorker/clientdbWorker');
 
 module.exports = {
-	updateProfile(req, res){
-		models.Client.findOne({ client_id: req.body.client_id })
-			.then(client => {
-				client.updateAttribute(req.body.newUpdates)
-					.then(response => res.send(response) )
-    	  	.catch(err => console.error(err))
-			})
-			.catch()
+	updateProfile(req, res, next){
+		console.log('Im here in updateProfile')
+		req.body.id = req.user.id;
+		clientDBWorker(req.body, 'updateProfile', req, res, next)
+		res.send()
 	}
 
 }

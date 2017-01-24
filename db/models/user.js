@@ -8,14 +8,14 @@ module.exports = function() {
         primaryKey: true,
         autoIncrement: true
       },
-      facebook_id: {defaultValue: null, type: DataTypes.STRING},
-      google_id: {defaultValue: null, type: DataTypes.STRING},
-      // user_pic: {defaultValue: null, type: url  }, 
-      userFirstName: {defaultValue: 'John', type: DataTypes.STRING},
-      userLastName: {defaultValue: 'Doe', type: DataTypes.STRING},
-      userEmail: { type: DataTypes.STRING, unique: true },
-      password: DataTypes.STRING,
-      clientPhone: {defaultValue: '111-111-1111', type: DataTypes.STRING}
+      clientFacebook_id: {defaultValue: null, type: DataTypes.STRING},
+      clientGoogle_id: {defaultValue: null, type: DataTypes.STRING}, 
+      clientFirstName: {defaultValue: null, type: DataTypes.STRING},
+      clientLastName: {defaultValue: null, type: DataTypes.STRING},
+      clientEmail: { type: DataTypes.STRING, unique: true },
+      clientPassword: DataTypes.STRING,
+      clientPhone: {defaultValue: '111-111-1111', type: DataTypes.STRING},
+      total: { defaultValue: 0, type: DataTypes.INTEGER }
       }, {
       timestamps: false,
       classMethods: {
