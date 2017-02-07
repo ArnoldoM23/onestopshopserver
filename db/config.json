@@ -1,8 +1,8 @@
 {
-  "username":"young",
-  "password":"",
-  "database":"onestop",
-  "host":"localhost",
-  "dialect":"postgres",
-  "port":"5432"
+  "username": "young",
+  "password": "",
+  "database": "onestop",
+  "host": "localhost",
+  "dialect": "postgres",
+  "port": "5432"
 }

@@ -1,11 +1,11 @@
-module.exports = function() {
-"use strict";
+module.exports = (function () {
+  'use strict';
 
-  var fs        = require("fs");
-  var path      = require("path");
-  var Sequelize = require("sequelize");
-  var env       = process.env.NODE_ENV || "development";
-  var config    = require('../config.json');
+  const fs = require('fs');
+  const path = require('path');
+  const Sequelize = require('sequelize');
+  const config = require('../config.json');
+  // const env = process.env.NODE_ENV || 'development';
   // For Heroku
   config.port = process.env.DB_PORT || config.port;
   config.host = process.env.DB_HOST || config.host;
@@ -13,26 +13,26 @@ module.exports = function() {
   config.password = process.env.DB_PASSWORD || config.password;
   config.database = process.env.DB_NAME || config.database;
 
-  var sequelize = new Sequelize(config.database, config.username, config.password, {
+  const sequelize = new Sequelize(config.database, config.username, config.password, {
     host: config.host,
     dialect: 'postgres',
     port: config.port
 
   });
-  var db        = {};
+  const db = {};
 
   fs
     .readdirSync(__dirname)
-    .filter(function(file) {
-      return (file.indexOf(".") !== 0) && (file !== "index.js");
+    .filter((file) => {
+      return (file.indexOf('.') !== 0) && (file !== 'index.js');
     })
-    .forEach(function(file) {
-      var model = sequelize.import(path.join(__dirname, file));
+    .forEach((file) => {
+      const model = sequelize.import(path.join(__dirname, file));
       db[model.name] = model;
     });
 
-  Object.keys(db).forEach(function(modelName) {
-    if ("associate" in db[modelName]) {
+  Object.keys(db).forEach((modelName) => {
+    if ('associate' in db[modelName]) {
       db[modelName].associate(db);
     }
   });
@@ -40,4 +40,4 @@ module.exports = function() {
   db.sequelize = sequelize;
   db.Sequelize = Sequelize;
   return db;
-}()
+}());

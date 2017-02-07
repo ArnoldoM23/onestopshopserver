@@ -1,22 +1,29 @@
-'use strict'
+'use strict';
 
-const models = require("../models");
-const sequelize = require('../models/index').sequelize;
+const models = require('../models');
 
 const clientdbWorker = {
 	queue: [],
 	error: [],
-	updateProfile(data, req, res, next){
-		models.Client.findOne({ client_id: req.user.id })
+	updateProfile(data, req, res, next, cb) {
+		models.Clients.findOne({ where: { client_id: req.user.dataValues.client_id } })
 			.then(client => {
-				client.updateAttribute(newUpdates)
-					.then(response => res.send(response) )
-    	  	.catch(err => console.error(err))
+				client.updateAttributes(data)
+					.then(response => {
+						cb(true);
+						res.send(response);
+					})
+    	  	.catch(err => {
+			  		handleError(data, 'updateProfile', err);
+			  		next(err);
+			  	});
 			})
-			.catch()
+			.catch(err => {
+	  		handleError(data, 'updateProfile', err);
+	  		next(err);
+	  	});
 	}
-}
-
+};
 
 function addToDB(data, storagePlace, req, res, next) {
 	const container = { data, storagePlace, req, res, next };
@@ -27,20 +34,19 @@ function addToDB(data, storagePlace, req, res, next) {
 			if (status) {
 				clientdbWorker.queue.shift();	
 			}
-			if(clientdbWorker.queue.length > 0){
+			if (clientdbWorker.queue.length > 0) {
 				currentContainer = clientdbWorker.queue[0];
-				clientdbWorker[currentContainer.storagePlace];
 				callWorker(currentContainer.storagePlace, currentContainer);
-			}else{
+			} else {
 				return;
 			}
 		});
-	};
+	}
 	callWorker(currentContainer.storagePlace, currentContainer);
-};
+}
 
-function handleError(data, destination, err){
-	clientdbWorker.error.push({ data: data, destination: destination, error: err});
+function handleError(data, destination, err) {
+	clientdbWorker.error.push({ data, destination, error: err });
 	clientdbWorker.queue.shift();
 	if (clientdbWorker.error.length > 5) {
 		console.log(clientdbWorker.error);

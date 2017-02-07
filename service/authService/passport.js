@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt-nodejs');
 const config = require('../../config');
 const Oauth = require('../../Oauth');
 const models = require('../../db/models');
-const jwt = require('jwt-simple');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const FacebookStrategy = require('passport-facebook').Strategy;
@@ -13,18 +12,18 @@ const authAddToDB = require('../../db/dbWorker/authdbWorker');
 
 const ROOT_URL = 'http://localhost:3090';
 // const ROOT_URL = 'http://shoponceserver.herokuapp.com';
-const localOptions = { usernameField: 'email'};
+const localOptions = { usernameField: 'email' };
 
-const localLogin = new LocalStrategy(localOptions, function(email, password, done){
-  models.Clients.findOne( { where: { clientEmail: email } } )
+const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
+  models.Clients.findOne({ where: { clientEmail: email } })
     .then(user => {
-      bcrypt.compare(password, user.dataValues.clientPassword, function(err, match){
-        if(err){ return done(err); }
+      bcrypt.compare(password, user.dataValues.clientPassword, (err, match) => {
+        if (err) { return done(err); }
         if (!match) { return done(null, false); }
         done(null, user);
       });
     })
-    .catch(err => done(err) );
+    .catch(err => done(err));
 });
 
 const jwtOptions = {
@@ -32,9 +31,9 @@ const jwtOptions = {
 	secretOrKey: process.env.SECRET || config.SECRET
 };
 
-const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done){
+const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
 	// find a user in the database by id.
-	models.Clients.findOne( { where: { client_id: payload.id} } )
+	models.Clients.findOne({ where: { client_id: payload.id } })
     .then(user => {
   		return user ? done(null, user) : done(null, false);
   	})
@@ -50,20 +49,26 @@ const facebookLogin = new FacebookStrategy({
     callbackURL: `${ROOT_URL}/auth/facebook/callback`,
     profileFields: ['id', 'displayName', 'name', 'emails']
   },
-  function(accessToken, refreshToken, profile, done) {
-    process.nextTick(function(){
-      profile.done = done;
-      profile.label = 'Facebook_id';
+   (accessToken, refreshToken, profile, done) => {
+    process.nextTick(() => {
       // add user to database
-      authAddToDB(profile, 'socialLogin')
+      const data = {
+        done,
+        id: profile.id,
+        label: 'Facebook_id',
+        first_name: profile._json.first_name,
+        last_name: profile._json.last_name,
+        email: profile._json.email
+      };
+      authAddToDB(data, 'socialLogin');
     });
 });
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser((user, done) => {
   done(null, user);
 });
 // deserialize the data
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
@@ -72,28 +77,25 @@ const googleLogin = new GoogleStrategy({
     clientSecret: /*process.env.GOOGLE_CLIENT_SECRET,*/ Oauth.Google.ENTER_CLIENT_SECRET,
     callbackURL: `${ROOT_URL}/auth/google/callback`
   },
-  function(token, refreshToken, profile, done) {
+  (token, refreshToken, profile, done) => {
     // asynchronous verification, for effect...
-    process.nextTick(function () {
-      profile.done = done;
-      profile.label = 'Google_id';
+    console.log("GOOOGLE PROFILE!!!!!!!!!!!", profile)
+    process.nextTick(() => {
       // add user to database
-      authAddToDB(profile, 'socialLogin')
+      const data = {
+        done,
+        id: profile.id,
+        label: 'Google_id',
+        first_name: profile.name.givenName,
+        last_name: profile.name.familyName,
+        email: profile.emails[0].value
+      };
+      authAddToDB(data, 'socialLogin');
     });
   }
 );
 
+passport.use(googleLogin);
 passport.use(localLogin);
 passport.use(jwtLogin);
-passport.use(facebookLogin)
-passport.use(googleLogin)
-
-function tokenForUser(user){
-  const today = new Date();
-  const exp = new Date(today);
-  exp.setDate(today.getDate() + 60);
-  const timestamp = parseInt(exp.getTime() / 1000);
-  return jwt.encode({ id: user.client_id, iat: timestamp }, config.SECRET )
-}
-
-module.exports = { getToken: tokenForUser };
+passport.use(facebookLogin);
