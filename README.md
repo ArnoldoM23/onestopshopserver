@@ -11,6 +11,7 @@ Node.js, Express.js, React.js, Redux.js, Webpack
 Team
 
 Arnoldo Munoz
+
 Local Development
 
 ## Requirements
