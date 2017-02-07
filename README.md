@@ -13,16 +13,33 @@ Team
 Arnoldo Munoz
 Local Development
 
+## Requirements
+- Node + npm
+- Homebrew
+- PostgreSQL
+
 From within the root directory:
 
-Step 1: Install dependencies
+
+Step 1:__ Install PostgreSQL
+##Database Setup
+
+```
+$ brew update
+$ brew install postgres
+
+```
+Step 2: Install dependencies
+```
 $ npm install
+```
 
-Step 2: Install Webpack
-$ npm install -g webpack
+Step 4: Start Postgres
+```
+$ npm run pgres
+```
 
-Step 3: Run server
+Step 4: Start server
+```
 $ npm start
-
-Step 4: Build project
-$ npm run build
+```
