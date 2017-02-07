@@ -79,7 +79,6 @@ const googleLogin = new GoogleStrategy({
   },
   (token, refreshToken, profile, done) => {
     // asynchronous verification, for effect...
-    console.log("GOOOGLE PROFILE!!!!!!!!!!!", profile)
     process.nextTick(() => {
       // add user to database
       const data = {

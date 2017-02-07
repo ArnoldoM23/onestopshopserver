@@ -22,7 +22,7 @@
 		.get(passport.authenticate('facebook', { scope: 'email' }));
 	authRouter.route('/auth/facebook/callback/')
 		.get(passport.authenticate('facebook', { failureRedirect: `${ROOT_URL}/signin` }), 
-	  (req, res) => {
+			(req, res) => {
 	  	const token = getToken.getToken(req.user);
 	    res.redirect(`${ROOT_URL}/?token=${token}`);
 	  });
