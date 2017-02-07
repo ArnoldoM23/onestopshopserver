@@ -11,6 +11,7 @@ Node.js, Express.js, React.js, Redux.js, Webpack
 Team
 
 Arnoldo Munoz
+
 Local Development
 
 ## Requirements
@@ -18,17 +19,15 @@ Local Development
 - Homebrew
 - PostgreSQL
 
-From within the root directory:
-
-
-Step 1:__ Install PostgreSQL
+Step 1: Install PostgreSQL
 ##Database Setup
 
 ```
 $ brew update
 $ brew install postgres
-
 ```
+From within the root directory:
+
 Step 2: Install dependencies
 ```
 $ npm install
