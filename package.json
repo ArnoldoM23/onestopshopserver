@@ -29,6 +29,7 @@
     "passport-google-oauth": "^1.0.0",
     "passport-jwt": "^2.1.0",
     "passport-local": "^1.0.0",
+    "paypal-rest-sdk": "^1.7.1",
     "pg": "^6.1.0",
     "sequelize": "^3.23.6"
   },

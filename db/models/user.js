@@ -2,35 +2,24 @@
 
 module.exports = (function () {
   return function (sequelize, DataTypes) {
-    const Clients = sequelize.define('Clients', {
-      client_id: {
+    const Users = sequelize.define('Users', {
+      user_id: {
         type: DataTypes.BIGINT,
         primaryKey: true,
         autoIncrement: true
       },
-      clientFacebook_id: { defaultValue: null, type: DataTypes.STRING },
-      clientGoogle_id: { defaultValue: null, type: DataTypes.STRING }, 
-      clientFirstName: { defaultValue: null, type: DataTypes.STRING },
-      clientLastName: { defaultValue: null, type: DataTypes.STRING },
-      clientEmail: { type: DataTypes.STRING, unique: true },
-      clientPassword: DataTypes.STRING,
-      clientPhone: { defaultValue: '111-111-1111', type: DataTypes.STRING },
-      total: { defaultValue: 0, type: DataTypes.INTEGER }
-      }, {
-      timestamps: false,
-      classMethods: {
-        associate(models) { 
-          Clients.belongsToMany(models.Vendors, {
-            through: {
-              model: models.UserVendor,
-              unique: false
-            },
-            foreignKey: 'providers_id',
-            constraints: false
-          }); 
-        }
-      }
+      userFacebook_id: { defaultValue: null, type: DataTypes.STRING },
+      userGoogle_id: { defaultValue: null, type: DataTypes.STRING }, 
+      userFirstName: { defaultValue: null, type: DataTypes.STRING },
+      userLastName: { defaultValue: null, type: DataTypes.STRING },
+      userEmail: { type: DataTypes.STRING, unique: true },
+      userPassword: DataTypes.STRING,
+      userPhone: { defaultValue: '111-111-1111', type: DataTypes.STRING },
+      userType: { defaultValue: null, type: DataTypes.STRING },
+      userTypeId: DataTypes.BIGINT
+    }, {
+      timestamp: false
     });
-    return Clients;
+    return Users;
   };
 }());

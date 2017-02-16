@@ -1,3 +1,5 @@
+'use strict';
+
 const passport = require('passport');
 const bcrypt = require('bcrypt-nodejs');
 const config = require('../../config');
@@ -8,16 +10,17 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const LocalStrategy = require('passport-local');
-const authAddToDB = require('../../db/dbWorker/authdbWorker');
+const authdbWorker = require('../../db/dbWorker/authdbWorker');
+const { addToDatabase } = require('../../db/dbWorker/dbHelpers');
 
 const ROOT_URL = 'http://localhost:3090';
 // const ROOT_URL = 'http://shoponceserver.herokuapp.com';
 const localOptions = { usernameField: 'email' };
 
 const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
-  models.Clients.findOne({ where: { clientEmail: email } })
-    .then(user => {
-      bcrypt.compare(password, user.dataValues.clientPassword, (err, match) => {
+  models.Users.findOne({ where: { userEmail: email } })
+    .then(user => {    
+      bcrypt.compare(password, user.dataValues.userPassword, (err, match) => {
         if (err) { return done(err); }
         if (!match) { return done(null, false); }
         done(null, user);
@@ -33,10 +36,10 @@ const jwtOptions = {
 
 const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
 	// find a user in the database by id.
-	models.Clients.findOne({ where: { client_id: payload.id } })
+	models.Users.findOne({ where: { user_id: payload.id } })
     .then(user => {
-  		return user ? done(null, user) : done(null, false);
-  	})
+      return user ? done(null, user) : done(null, false);
+    })
     .catch(err => done(err));
 });
 
@@ -60,7 +63,7 @@ const facebookLogin = new FacebookStrategy({
         last_name: profile._json.last_name,
         email: profile._json.email
       };
-      authAddToDB(data, 'socialLogin');
+      addToDatabase(authdbWorker, data, 'socialLogin');
     });
 });
 
@@ -89,7 +92,7 @@ const googleLogin = new GoogleStrategy({
         last_name: profile.name.familyName,
         email: profile.emails[0].value
       };
-      authAddToDB(data, 'socialLogin');
+      addToDatabase(authdbWorker, data, 'socialLogin');
     });
   }
 );

@@ -17,15 +17,18 @@
 		.post(requireSignin, Auth.signin);
 	authRouter.route('/signup/')
 		.post(Auth.signup);
+	authRouter.route('/signupVendor/')
+		.post(Auth.signupVendor);
+		
 	// ================= Facebook login =======================	
 	authRouter.route('/auth/facebook/')
 		.get(passport.authenticate('facebook', { scope: 'email' }));
 	authRouter.route('/auth/facebook/callback/')
 		.get(passport.authenticate('facebook', { failureRedirect: `${ROOT_URL}/signin` }), 
 			(req, res) => {
-	  	const token = getToken.getToken(req.user);
-	    res.redirect(`${ROOT_URL}/?token=${token}`);
-	  });
+			const token = getToken.getToken(req.user);
+			res.redirect(`${ROOT_URL}/?token=${token}`);
+		});
 	// ================= Google login =======================
 	authRouter.route('/auth/google/')
 		.get(passport.authenticate('google', { scope: ['profile', 'email'] }));

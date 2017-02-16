@@ -10,5 +10,5 @@ const requireAuth = passport.authenticate('jwt', { session: false });
 module.exports = function (app) {
 	app.use('/', authRouter);
 	app.use('/client', requireAuth, clientRouter);
-	app.use('/vendors', requireAuth, vendorRouter);
+	app.use('/vendor', requireAuth, vendorRouter);
 };

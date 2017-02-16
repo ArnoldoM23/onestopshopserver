@@ -6,7 +6,7 @@
 	const models = require('../db/models');
 
 	clientRouter.param('id', (req, res, next, id) => {
-		models.Clients.findOne({ where: { client_id: id } })
+		models.Users.findOne({ where: { client_id: id } })
 			.then(user => {
 				if (!user) { next(null); }
 				req.user = user;

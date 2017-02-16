@@ -8,7 +8,7 @@ function tokenForUser(user) {
   const exp = new Date(today);
   exp.setDate(today.getDate() + 60);
   const timestamp = parseInt(exp.getTime() / 1000);
-  return jwt.encode({ id: user.client_id, iat: timestamp }, config.SECRET);
+  return jwt.encode({ id: user.user_id, iat: timestamp }, config.SECRET);
 }
 
 module.exports = { getToken: tokenForUser };
