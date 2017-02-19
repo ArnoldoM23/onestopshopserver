@@ -17,8 +17,6 @@
 		.post(requireSignin, Auth.signin);
 	authRouter.route('/signup/')
 		.post(Auth.signup);
-	authRouter.route('/signupVendor/')
-		.post(Auth.signupVendor);
 		
 	// ================= Facebook login =======================	
 	authRouter.route('/auth/facebook/')
@@ -27,7 +25,11 @@
 		.get(passport.authenticate('facebook', { failureRedirect: `${ROOT_URL}/signin` }), 
 			(req, res) => {
 			const token = getToken.getToken(req.user);
-			res.redirect(`${ROOT_URL}/?token=${token}`);
+			if (req.user.isNew) {
+				res.redirect(`${ROOT_URL}/vendorOrClient/?id=${req.user.dataValues.user_id}`);
+			} else {
+				res.redirect(`${ROOT_URL}/?token=${token}`);
+			}
 		});
 	// ================= Google login =======================
 	authRouter.route('/auth/google/')
@@ -35,7 +37,11 @@
 	authRouter.route('/auth/google/callback/')
 		.get(passport.authenticate('google', { failureRedirect: `${ROOT_URL}/signin` }), (req, res) => {
 			const token = getToken.getToken(req.user);
-			res.redirect(`${ROOT_URL}/?token=${token}`);
+			if (req.user.isNew) {
+				res.redirect(`${ROOT_URL}/vendorOrClient/?id=${req.user.dataValues.user_id}`);
+			} else {
+				res.redirect(`${ROOT_URL}/?token=${token}`);
+			}
 		});
 
 	module.exports = authRouter;

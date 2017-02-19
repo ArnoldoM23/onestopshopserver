@@ -2,18 +2,21 @@
 
 const bcrypt = require('bcrypt-nodejs');
 const models = require('../models');
-const getToken = require('../../service/authService/authHelpers');
+const { getToken } = require('../../service/authService/authHelpers');
 const { handleError } = require('./dbHelpers');
+
+const ROOT_URL = 'http://localhost:3000';
+// const ROOT_URL = 'http://shoponceserver.herokuapp.com';
 
 const authDBWorker = {
   queue: [],
 	error: [],
-  signup(credentials, req, res, next, cb) {
+  signup(credentials, req, res, next, success) {
   // refactor this to signup vender as well.
 		models.Users.findOne({ where: { userEmail: credentials.email } })
 			.then(user => {
 				if (user) {
-					cb(true);
+					success(true);
 					res.status(422).json({ error: 'You Already exists' });
 				} else {
 					bcrypt.genSalt(10, (err, salt) => {
@@ -23,8 +26,8 @@ const authDBWorker = {
 							// Create new user
 							models.Users.create({ userPassword: hash, userEmail: credentials.email })
 								.then(user => { 
-									cb(true);
-									res.json({ token: getToken.getToken(user) });
+									success(true);
+									res.json({ id: user.dataValues.user_id });
 								})
 								.catch(err => {
 									handleError(authDBWorker, credentials, 'signup', err);
@@ -39,14 +42,15 @@ const authDBWorker = {
 				next(err);
 			});
 	},
-	socialLogin(data, req, res, next, cb) {
+	socialLogin(data, req, res, next, success) {
 		const id = `user${data.label}`;
 		const condition = {};
 		condition[id] = data.id;
 		models.Users.findOne({ where: condition })
       .then(user => {
         if (user) {
-					cb(true);
+					success(true);
+					user.isNew = false;
           return data.done(null, user);
         } 
 				const newUser = { 
@@ -57,7 +61,8 @@ const authDBWorker = {
 				newUser[id] = data.id;
         models.Users.create(newUser)
             .then(user => { 
-							cb(true);
+							success(true);
+							user.isNew = true;
 							data.done(null, user);
             })
             .catch(err => {
@@ -68,6 +73,29 @@ const authDBWorker = {
       .catch(err => {
 				handleError(authDBWorker, data, 'socialLogin', err);
 				data.done(err); 
+			});
+	},
+
+	createVendorOrClient(data, req, res, next, success) {
+		models[data.type].findOne({ where: { user_id: data.id } })
+			.then(user => {
+				if (user) { 
+					success(true);
+					res.status(422).json({ error: 'You Already exists' });
+				}
+				models[data.type].create({ user_id: data.id })
+					.then(newUser => {
+						success(true);
+						res.json({ token: getToken(newUser) });
+					})
+					.catch(err => {
+						handleError(authDBWorker, data, 'createVendorOrClient', err);
+						next(err);
+					});
+			})
+			.catch(err => {
+				handleError(authDBWorker, data, 'createVendorOrClient', err);
+				next(err);
 			});
 	}
 };

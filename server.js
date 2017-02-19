@@ -112,31 +112,16 @@ if (cluster.isMaster) {
 	//     }
 	// });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	app.all('/*', (req, res, next) => {
-		res.header('Access-Control-Allow-Origin', '*');
-		res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-		res.header('Access-Control-Allow-Methods', 'GET', 'POST', 'PUT');
-		next();
-	});
-
+	const corsOptions = {
+		origin: 'http://localhost:3000',
+		optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+	};
+	app.options('*', cors(corsOptions));
+	app.use(cors(corsOptions));
 	app.use(morgan('combined'));
 	app.use(bodyParser.json());
 	app.use(passport.initialize());
-	app.use(cors());
+	
 
 	router(app);
 

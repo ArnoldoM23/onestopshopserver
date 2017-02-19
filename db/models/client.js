@@ -9,7 +9,7 @@ module.exports = (function () {
         autoIncrement: true
 			},
 			user_id: DataTypes.BIGINT,
-			total: DataTypes.BIGINT
+			total: { defaultValue: 0, type: DataTypes.BIGINT }
 		}, {
 			timestamp: false
 		});
