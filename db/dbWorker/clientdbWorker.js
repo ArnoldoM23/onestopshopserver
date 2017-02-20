@@ -7,7 +7,7 @@ const clientdbWorker = {
 	queue: [],
 	error: [],
 	updateProfile(data, req, res, next, cb) {
-		models.Users.findOne({ where: { user_id: req.user.dataValues.client_id } })
+		models.Users.findOne({ where: { user_id: req.user.dataValues.user_id } })
 			.then(user => {
 				user.updateAttributes(data)
 					.then(updatedClient => {

@@ -17,8 +17,8 @@
 		.post(requireSignin, Auth.signin);
 	authRouter.route('/signup/')
 		.post(Auth.signup);
-	authRouter.route('/createVendorOrClient/')
-		.post(Auth.createVendorOrClient);
+	authRouter.route('/becomeVendorOrClient/')
+		.post(Auth.becomeVendorOrClient);
 		
 	// ================= Facebook login =======================	
 	authRouter.route('/auth/facebook/')

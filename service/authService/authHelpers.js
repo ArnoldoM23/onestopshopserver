@@ -9,9 +9,10 @@ function tokenForUser(user) {
   exp.setDate(today.getDate() + 60);
   const timestamp = parseInt(exp.getTime() / 1000);
   return jwt.encode({ 
-		id: user.user_id, 
+		id: user.user_id,
+    name: user.userFirstName, 
 		type: user.userType, 
-		typeId: user.vendor_id || user.client_id, 
+		typeId: user.vendor_id || user.client_id || user.userTypeId, 
 		iat: timestamp 
   }, config.SECRET);
 }

@@ -74,8 +74,9 @@ const authDBWorker = {
 			});
 	},
 
-	createVendorOrClient(data, req, res, next, success) {
-		console.log('DATA========================', data);
+	becomeVendorOrClient(data, req, res, next, success) {
+		// TODO: add username to token for social login.
+
 		models[data.userType].findOne({ where: { user_id: data.user_id } })
 			.then(user => {
 				if (user) { 
@@ -94,12 +95,12 @@ const authDBWorker = {
 						authDBWorker.updateUser(typeData, data.user_id, res, token, success, next);
 					})
 					.catch(err => {
-						handleError(authDBWorker, data, 'createVendorOrClient', err);
+						handleError(authDBWorker, data, 'becomeVendorOrClient', err);
 						next(err);
 					});
 			})
 			.catch(err => {
-				handleError(authDBWorker, data, 'createVendorOrClient', err);
+				handleError(authDBWorker, data, 'becomeVendorOrClient', err);
 				next(err);
 			});
 	},

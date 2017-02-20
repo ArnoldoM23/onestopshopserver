@@ -19,9 +19,9 @@ exports.signup = function (req, res, next) {
 	addToDatabase(authdbWorker, req.body, 'signup', req, res, next);
 };
 
-exports.createVendorOrClient = function (req, res, next) {
+exports.becomeVendorOrClient = function (req, res, next) {
 	if (!req.body.userType) {
 		return res.status(422).json({ error: 'You must provide a user type' });
 	}
-	addToDatabase(authdbWorker, req.body, 'createVendorOrClient', req, res, next);
+	addToDatabase(authdbWorker, req.body, 'becomeVendorOrClient', req, res, next);
 };

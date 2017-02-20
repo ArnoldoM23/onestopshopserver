@@ -9,8 +9,8 @@ module.exports = (function () {
         autoIncrement: true
       },
       user_id: DataTypes.BIGINT,
-      category: { defaultValue: null, type: DataTypes.STRING },
-      location: { defaultValue: null, type: DataTypes.STRING },
+      category: { defaultValue: 'Vendor', type: DataTypes.STRING },
+      location: { defaultValue: 'Walnut Creek.', type: DataTypes.STRING },
       price: { defaultValue: 0, type: DataTypes.INTEGER }
     }, {
       timestamps: false
