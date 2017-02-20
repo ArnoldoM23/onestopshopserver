@@ -13,7 +13,7 @@ module.exports = (function () {
       location: { defaultValue: null, type: DataTypes.STRING },
       price: { defaultValue: 0, type: DataTypes.INTEGER }
     }, {
-      timestamp: false
+      timestamps: false
     });
     return Vendors;
   };

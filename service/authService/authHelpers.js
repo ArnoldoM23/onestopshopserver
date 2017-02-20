@@ -11,7 +11,7 @@ function tokenForUser(user) {
   return jwt.encode({ 
 		id: user.user_id, 
 		type: user.userType, 
-		typeId: user.userTypeId, 
+		typeId: user.vendor_id || user.client_id, 
 		iat: timestamp 
   }, config.SECRET);
 }

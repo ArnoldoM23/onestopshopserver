@@ -18,7 +18,7 @@ module.exports = (function () {
       userType: { defaultValue: null, type: DataTypes.STRING },
       userTypeId: DataTypes.BIGINT
     }, {
-      timestamp: false
+      timestamps: false
     });
     return Users;
   };

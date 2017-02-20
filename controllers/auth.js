@@ -13,9 +13,15 @@ exports.signup = function (req, res, next) {
 	const email = req.body.email;
 	const password = req.body.password;
 	if (!email || !password) {
-		return res.status(422).json({ error: 'You must provide email and password ' });
+		return res.status(422).json({ error: 'You must provide email and password' });
 	}
 	// add user to database
 	addToDatabase(authdbWorker, req.body, 'signup', req, res, next);
 };
 
+exports.createVendorOrClient = function (req, res, next) {
+	if (!req.body.userType) {
+		return res.status(422).json({ error: 'You must provide a user type' });
+	}
+	addToDatabase(authdbWorker, req.body, 'createVendorOrClient', req, res, next);
+};

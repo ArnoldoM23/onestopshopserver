@@ -14,6 +14,7 @@ if (cluster.isMaster) {
 } else {
 	const express = require('express');
 	const morgan = require('morgan');
+	const http = require('http');
 	const bodyParser = require('body-parser');
 	const cors = require('cors');
 	const router = require('./routes/routes');
@@ -121,12 +122,11 @@ if (cluster.isMaster) {
 	app.use(morgan('combined'));
 	app.use(bodyParser.json());
 	app.use(passport.initialize());
-	
 
 	router(app);
-
+	const server = http.createServer(app);
 	models.sequelize.sync({ force: false }).then(() => {
-		app.listen(PORT, () => console.log('listening on port', PORT));
+		server.listen(PORT, () => console.log('listening on port', PORT));
 	});
 } 
 

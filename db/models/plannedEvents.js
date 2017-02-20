@@ -12,7 +12,7 @@ module.exports = (function () {
       vendor_id: { type: DataTypes.BIGINT },
       dateOfEvent: { defaultValue: null, type: DataTypes.STRING }
     }, {
-      timestamp: false
+      timestamps: false
     });
     return PlannedEvents;
   };

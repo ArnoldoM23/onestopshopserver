@@ -5,9 +5,6 @@ const models = require('../models');
 const { getToken } = require('../../service/authService/authHelpers');
 const { handleError } = require('./dbHelpers');
 
-const ROOT_URL = 'http://localhost:3000';
-// const ROOT_URL = 'http://shoponceserver.herokuapp.com';
-
 const authDBWorker = {
   queue: [],
 	error: [],
@@ -43,6 +40,7 @@ const authDBWorker = {
 			});
 	},
 	socialLogin(data, req, res, next, success) {
+		// create label for google or facebook
 		const id = `user${data.label}`;
 		const condition = {};
 		condition[id] = data.id;
@@ -77,16 +75,23 @@ const authDBWorker = {
 	},
 
 	createVendorOrClient(data, req, res, next, success) {
-		models[data.type].findOne({ where: { user_id: data.id } })
+		console.log('DATA========================', data);
+		models[data.userType].findOne({ where: { user_id: data.user_id } })
 			.then(user => {
 				if (user) { 
 					success(true);
 					res.status(422).json({ error: 'You Already exists' });
 				}
-				models[data.type].create({ user_id: data.id })
+				// Create a new vendor or client
+				models[data.userType].create({ user_id: data.user_id })
 					.then(newUser => {
-						success(true);
-						res.json({ token: getToken(newUser) });
+						newUser.userType = data.userType;
+						newUser.user_id = data.user_id;
+						const token = { token: getToken(newUser) };
+						const client_id = Number(newUser.dataValues.client_id);
+						const vendor_id = Number(newUser.dataValues.vendor_id);
+						const typeData = { userType: data.userType, userTypeId: client_id || vendor_id };
+						authDBWorker.updateUser(typeData, data.user_id, res, token, success, next);
 					})
 					.catch(err => {
 						handleError(authDBWorker, data, 'createVendorOrClient', err);
@@ -95,6 +100,25 @@ const authDBWorker = {
 			})
 			.catch(err => {
 				handleError(authDBWorker, data, 'createVendorOrClient', err);
+				next(err);
+			});
+	},
+
+	updateUser(data, id, res, responseData, success, next) {
+		models.Users.findOne({ where: { user_id: id } })
+			.then(user => {
+				user.updateAttributes(data)
+					.then(updatedClient => {
+						success(true);
+						res.json(responseData || updatedClient);
+					})
+					.catch(err => {
+						handleError(authDBWorker, data, 'updateUser', err);
+						next(err);
+					});
+			})
+			.catch(err => {
+				handleError(authDBWorker, data, 'updateProfile', err);
 				next(err);
 			});
 	}
